@@ -1,4 +1,4 @@
-import { state } from '../store';
+import { state } from '../store.js';
 
 export function Dashboard() {
   const isAdmin = state.user?.role === 'admin';

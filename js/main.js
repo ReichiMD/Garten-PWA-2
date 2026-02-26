@@ -1,21 +1,19 @@
-import './style.css';
-import { state } from './store';
-import { UserRole } from './types';
-import { Navbar } from './components/Navbar';
+import { state } from './store.js';
+import { Navbar } from './components/Navbar.js';
 
 // Views
-import { Login } from './views/Login';
-import { Dashboard } from './views/Dashboard';
-import { Club } from './views/Club';
-import { Profile } from './views/Profile';
-import { Settings } from './views/Settings';
-import { Hours } from './views/Hours';
-import { Market } from './views/Market';
-import { Chat } from './views/Chat';
-import { Meter, Report, Booking, Documents } from './views/Misc';
+import { Login } from './views/Login.js';
+import { Dashboard } from './views/Dashboard.js';
+import { Club } from './views/Club.js';
+import { Profile } from './views/Profile.js';
+import { Settings } from './views/Settings.js';
+import { Hours } from './views/Hours.js';
+import { Market } from './views/Market.js';
+import { Chat } from './views/Chat.js';
+import { Meter, Report, Booking, Documents } from './views/Misc.js';
 
 // --- DOM Elements ---
-const app = document.getElementById('app')!;
+const app = document.getElementById('app');
 
 // --- Service Worker ---
 if ('serviceWorker' in navigator) {
@@ -27,7 +25,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // --- View Registry ---
-const Views: Record<string, () => string> = {
+const Views = {
   login: Login,
   dashboard: Dashboard,
   club: Club,
@@ -46,9 +44,7 @@ const Views: Record<string, () => string> = {
 function render() {
   // 1. Check Auth
   if (!state.user && state.currentView !== 'login') {
-    state.currentView = 'login'; // Direct mutation triggers proxy if we used it, but here we just render
-    // Note: In our store implementation, setting property triggers event, but we are inside render loop.
-    // Let's just ensure we render login.
+    state.currentView = 'login';
   }
 
   // 2. Render View
@@ -65,8 +61,8 @@ function attachListeners() {
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const username = (document.getElementById('username') as HTMLInputElement).value;
-      const role = (document.getElementById('role') as HTMLSelectElement).value as UserRole;
+      const username = document.getElementById('username').value;
+      const role = document.getElementById('role').value;
       
       state.user = { username, role };
       state.currentView = 'dashboard';
@@ -86,20 +82,14 @@ function attachListeners() {
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) {
     themeToggle.addEventListener('change', (e) => {
-      const isChecked = (e.target as HTMLInputElement).checked;
+      const isChecked = e.target.checked;
       state.theme = isChecked ? 'dark' : 'light';
     });
   }
 }
 
 // --- Global Navigation Helper ---
-declare global {
-  interface Window {
-    navigate: (view: string) => void;
-  }
-}
-
-window.navigate = (view: string) => {
+window.navigate = (view) => {
   state.currentView = view;
 };
 
