@@ -1,14 +1,12 @@
-import { AppState } from './types';
-
-const initialState: AppState = {
+const initialState = {
   user: JSON.parse(localStorage.getItem('garten_user') || 'null'),
   currentView: 'login',
-  theme: (localStorage.getItem('garten_theme') as 'light' | 'dark') || 'light'
+  theme: (localStorage.getItem('garten_theme')) || 'light'
 };
 
 export const state = new Proxy(initialState, {
   set(target, property, value) {
-    target[property as keyof AppState] = value;
+    target[property] = value;
     
     // Persistence
     if (property === 'user') {

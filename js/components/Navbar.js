@@ -1,4 +1,4 @@
-import { state } from '../store';
+import { state } from '../store.js';
 
 export function Navbar() {
   if (!state.user) return '';
